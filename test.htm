@@ -1,0 +1,175 @@
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf8" />
+	<meta http-equiv="content-type" content="text/html" />
+	<meta name="author" content="GallerySoft.info" />
+
+	<title>Untitled 1</title>
+</head>
+
+<body>
+
+
+<form>
+
+<input type="text" id="sosim" />
+<a id="search" href="#">Tìm sim</a>
+</form>
+
+<table>
+
+<thead>
+<tr>
+<th>Số sim</th>
+<th>Giá nhập</th>
+<th>Giá bán</th>
+
+</tr></thead>
+<tbody>
+
+
+</tbody>
+</table>
+<script src="https://www.gstatic.com/firebasejs/4.0.0/firebase.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+
+<script>
+
+  var config = {
+    apiKey: "AIzaSyBKFIcj2O0GB65kUVHINVS3mL3jJN9I-Q4",
+    authDomain: "stvdb-1b7a7.firebaseapp.com",
+    databaseURL: "https://stvdb-1b7a7.firebaseio.com",
+    projectId: "stvdb-1b7a7",
+    storageBucket: "stvdb-1b7a7.appspot.com",
+    messagingSenderId: "243530194443"
+  };
+  firebase.initializeApp(config);
+
+
+   // Get a snapshot containing the matching children from under Films
+   var database = firebase.database();
+   
+
+
+
+
+
+
+
+function createOnePost(table, data) {
+  firebase.database().ref(table).set(data);
+}
+
+
+function createPost(){
+  //tạo 1 key sử dụng phương thức push
+  var newKey = firebase.database().ref().child('CallLog').push().key;
+  firebase.database().ref('CallLog/'+newKey).set({
+    secretKey : 'Giá trị 2',
+    phone : '0988765679',
+    extension : '2342',
+    callid : 123
+  });
+}
+
+
+function readData(table) {
+  return firebase.database().ref(table).once('value').then(function (snapshot) {
+    var data = snapshot.val(); 
+    for (var x in data) {
+      console.log(data);  
+
+    }  
+  });
+  
+}
+
+firebase.database().ref("simso/").once("length" || "size").then(callback)
+
+var readWhenDataChanged = function () {
+  	firebase.database().ref('CallLog').on('value', function (snapshot) {
+            //Xử lý nghiệp vụ tại đây, ví dụ như show popup, nội dung chat...
+	    var data = snapshot.val(); 
+	    for (var x in data) {
+	      console.log(data[x].secretKey);  
+	      console.log(data[x].phone);  
+	      console.log(data[x].extension);  
+	      console.log(data[x].callid);  
+	    }   
+  });
+}
+
+
+
+
+</script>
+<script>
+          var myArray = [];
+$(document).ready(function(){
+    
+    $("#search").click(function(){
+       
+       var sosim = $("#sosim").val();
+          var rootRef = firebase.database().ref();
+       if(sosim.indexOf("*") != -1)
+       {
+        
+            split=sosim.split('*');
+            
+            console.log(split);
+            
+     
+
+
+
+            // If a user doesn't enter a full name, the query only
+            // returns first names that match, I need to also return
+            // last names that match the query.
+            // Does this mean I repeat this query 3 other times (first name
+            // , last name, and full name)?
+
+            rootRef.child('simso').orderByChild('sim2').startAt(split[0]).endAt(split[1] + '\uf8ff').limitToLast(100).on("child_added", function (snapshot) {
+                var row = snapshot.val();
+
+                
+                
+                var tr ='<tr><td>'+row.sim1+'</td><td>'+row.simdl+'</td><td>'+row.giaban+'</td></tr>';
+                $("tbody").append(tr);
+                
+                
+                
+
+            })
+            console.log(1);
+            
+       }
+       else
+       {
+          rootRef.child('simso').orderByChild('sim2').equalTo(sosim).on("child_added", function (snapshot) {
+                var row = snapshot.val();
+
+
+               
+                var tr ='<tr><td>'+row.sim1+'</td><td>'+row.simdl+'</td><td>'+row.giaban+'</td></tr>';
+                $("tbody").append(tr);
+                
+            
+
+            })
+           
+               console.log(2);
+       }
+       
+       
+       
+        
+    });
+});
+</script>
+
+
+</body>
+</html>
